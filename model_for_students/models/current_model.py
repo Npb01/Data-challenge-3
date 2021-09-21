@@ -185,6 +185,8 @@ def predict_vegetation(weir,last_days,avg_temp,data_path):
         print("The Temperature was not available")
     data = {'TIME':  new_dates,'Predicted backwater by vegetation': predictions}
     df = pd.DataFrame (data, columns = ['TIME','Predicted backwater by vegetation'])
+    print(len(df))
+    #df['Q'] = data['Q'][-20:]
     print(df)
     return df
     
