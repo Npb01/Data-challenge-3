@@ -13,7 +13,7 @@ data_path=r'C:\\Users\\20193727\\Downloads\\data_for_students\\data\\feature_tab
           #r"  #'C:\\Users\\Bringer\\Documents\\JADS\\Aa-en-Maas\\Features\\' #(--data_path)
 weir='211C_211B' #(--weir)
 risk_date='2021-04-01' # (--risk_date)
-prediction=False # True for prediction (--prediction)
+prediction=True # True for prediction (--prediction)
 last_days=7 # (--last_days) For prediction: Defines how many days the linear model takes into account to predict the next 21 days
 avg_temp=22 # (--avg_temp) For prediction: Average Temperature adjusts the prediction +/- 20%
 #---------------End of adjust variables-------------------------------------------------------------------------------------------
@@ -155,7 +155,8 @@ def predict_vegetation(weir,last_days,avg_temp,data_path):
     # Get the last data points depending on number of last_days
     last_data=data.tail(last_days)
     # Get last day to calculate 
-    last_day = datetime.datetime.strptime(last_data.iloc[-1]['TIME'], "%Y-%m-%d")
+    last_day = datetime.datetime.strptime(last_data.iloc[-1]['TIME'], "%Y-%m-%d") #setting the -1 to -21 might allow us to predict 21 days that are already in the data
+                                                                                  # thus allowing us to compare data to our predictions.
     # Get dates of the next 21 days
     new_dates=[last_day+datetime.timedelta(days=i) for i in range(1,22)]
     # Calculate back water by vegetation for the last days
