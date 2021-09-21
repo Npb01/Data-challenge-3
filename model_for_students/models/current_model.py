@@ -13,7 +13,7 @@ data_path=r'C:\\Users\\20193727\\Downloads\\data_for_students\\data\\feature_tab
           #r"  #'C:\\Users\\Bringer\\Documents\\JADS\\Aa-en-Maas\\Features\\' #(--data_path)
 weir='211C_211B' #(--weir)
 risk_date='2021-04-01' # (--risk_date)
-prediction=True # True for prediction (--prediction)
+prediction=False # True for prediction (--prediction)
 last_days=7 # (--last_days) For prediction: Defines how many days the linear model takes into account to predict the next 21 days
 avg_temp=22 # (--avg_temp) For prediction: Average Temperature adjusts the prediction +/- 20%
 #---------------End of adjust variables-------------------------------------------------------------------------------------------
