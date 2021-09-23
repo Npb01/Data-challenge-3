@@ -1,0 +1,42 @@
+def analyze_pred_veg(weir,last_days,avg_temp,data_path,risk_date):
+    data=get_data(weir,data_path,date_format=True)
+    data.reset_index(inplace=True)
+    #get the real vegetation that will be predicted:
+    real_vegetation = (data[data['index'] > risk_date].head(21)).reset_index()
+    #get the data before and including the risk data:
+    data = data[data['index'] <= risk_date]
+    # Get the last data points depending on number of last_days
+    last_data=data.tail(last_days)
+    last_data.rename(columns = {"index": "TIME"}, inplace = True)
+    # Get last day to calculate 
+    last_day = datetime.datetime.strptime(last_data.iloc[-1]['TIME'], "%Y-%m-%d")
+    # Get dates of the next 21 days
+    new_dates=[last_day+datetime.timedelta(days=i) for i in range(1,22)]
+    # Calculate back water by vegetation for the last days
+    last_data['vegetation']=last_data['TIME'].apply(lambda row:calc_vegetation(weir,get_data(weir,data_path,date_format=True),row,data_path))
+    last_data.reset_index(inplace=True)
+    # Define linear model
+    reg = linear_model.LinearRegression()
+    # Take index and the back water by vegetation as training data
+    x_train=last_data.index.to_numpy().reshape(-1, 1)
+    y_train=last_data['vegetation'].to_numpy().reshape(-1, 1)
+    # Fit the linear model on the last days
+    reg.fit(x_train,y_train)
+    # Get index for the next 21 days
+    x_test=[x_train[-1]+i for i in range(1,22)]
+    # Predict the vegetation for the next 21 days
+    predictions=reg.predict(x_test)
+    # Format
+    predictions=[item for elem in predictions.tolist() for item in elem]
+    # Depending on the temperature add multplication value to adjust values
+    try:
+        if (avg_temp > 25):
+            predictions=[pred*1.2 for pred in predictions]
+        elif (avg_temp<20):
+            predictions=[pred*0.8 for pred in predictions]
+    except:
+        print("The Temperature was not available")
+    data = {'TIME':  new_dates,'Predicted backwater by vegetation': predictions}
+    df = pd.DataFrame (data, columns = ['TIME','Predicted backwater by vegetation'])
+    df['Real backwater'] = real_vegetation['VERSCHIL']
+    return df
