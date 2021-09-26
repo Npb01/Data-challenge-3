@@ -40,3 +40,23 @@ def analyze_pred_veg(weir,last_days,avg_temp,data_path,risk_date):
     df = pd.DataFrame (data, columns = ['TIME','Predicted backwater by vegetation'])
     df['Real backwater'] = real_vegetation['VERSCHIL']
     return df
+
+
+
+
+def get_mse(weir,data_path,last_days,avg_temp):
+    data=get_data(weir,data_path,date_format=True).reset_index()
+    lst = []
+    lst_dates = data['index'].iloc[6:len(data)-21].to_list()
+    #print(len(lst_dates))
+    #i=1
+    for risk_date in lst_dates:
+        #print(i)
+        df = analyze_pred_veg(weir,last_days,avg_temp,data_path,risk_date)
+        mse = mean_squared_error(df['Real backwater'],df['Predicted backwater by vegetation'])
+        lst.append(mse)
+        #i+=1
+    
+    df_mse = pd.DataFrame(index=lst_dates)
+    df_mse['mse'] = lst
+    return df_mse
