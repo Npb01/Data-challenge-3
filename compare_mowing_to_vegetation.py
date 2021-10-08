@@ -48,7 +48,7 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
     last_day = datetime.datetime.strptime(last_data.iloc[-1]['TIME'], "%Y-%m-%d") #setting the -1 to -21 might allow us to predict 21 days that are already in the data
                                                                                   # thus allowing us to compare data to our predictions.
     # Get dates of the next 21 days
-    new_dates=[last_day+datetime.timedelta(days=i) for i in range(1,3)]
+    new_dates=[last_day+datetime.timedelta(days=1)]#ifor i in range(1,3)]
     # Calculate back water by vegetation for the last days
     last_data['vegetation']=last_data['TIME'].apply(lambda row:calc_vegetation(weir,get_data(weir,data_path,date_format=True),row,data_path))
     last_data.reset_index(inplace=True)
@@ -75,9 +75,9 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
         print("The Temperature was not available")
     data = {'TIME':  new_dates,'Predicted backwater by vegetation': predictions}
     df = pd.DataFrame (data, columns = ['TIME','Predicted backwater by vegetation'])
-    print(len(df))
+    #print(len(df))
     #df['Q'] = data['Q'][-20:]
-    print(df)
+    #print(df)
     return df
 
 def predict_whole_df():
