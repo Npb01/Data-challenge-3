@@ -7,6 +7,7 @@ from sklearn import linear_model
 import datetime
 import argparse
 pd.options.mode.chained_assignment = None  # default='warn'
+from current_model import get_model, calc_vegetation, predict_vegetation, negative_backwater_to_zero
 
 #---------------Please adjust variables here or in the command line------------------------------------------------------------
 data_path=r'C:\\Users\\20193727\\Downloads\\data_for_students\\data\\feature_tables\\'
