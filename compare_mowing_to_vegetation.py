@@ -60,7 +60,7 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
     # Fit the linear model on the last days
     reg.fit(x_train,y_train)
     # Get index for the next 21 days
-    x_test=[x_train[-1]+i for i in range(1,3)]
+    x_test=[x_train[-1]+1]#+i for i in range(1,3)]
     # Predict the vegetation for the next 21 days
     predictions=reg.predict(x_test)
     # Format
@@ -91,13 +91,14 @@ def predict_whole_df():
     args = parser.parse_args()
 
     df = get_data(args.weir, args.data_path)
-    for idx in range(len(df)):
+    final_df = predict_vegetation(weir=args.weir, train_days=args.last_days, avg_temp=args.avg_temp,
+                             data_path=args.data_path, pred_date_idx=7)
 
+    for idx in range(8,len(df)):
+        df1 = predict_vegetation(weir=args.weir, train_days=args.last_days, avg_temp=args.avg_temp,
+                             data_path=args.data_path, pred_date_idx=idx)
+        final_df.append(df1, ignore_index=True)
 
-    df1 = predict_vegetation(weir=args.weir,train_days=args.last_days,avg_temp=args.avg_temp,data_path=args.data_path, pred_date_idx=-1)
-    df2 = predict_vegetation(weir=args.weir,train_days=args.last_days,avg_temp=args.avg_temp,data_path=args.data_path, pred_date_idx=-1)
-    frames = [df1, df2]
-    final_df = df1.append(df2, ignore_index=True)
     print(final_df)
 
-main()
+predict_whole_df()
