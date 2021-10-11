@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import lmfit
 import datetime
 from datetime import date
@@ -12,7 +13,7 @@ from current_model import get_model, calc_vegetation, negative_backwater_to_zero
 #---------------Please adjust variables here or in the command line------------------------------------------------------------
 data_path=r'C:\\Users\\20193727\\Downloads\\data_for_students\\data\\feature_tables\\'
           #r"  #'C:\\Users\\Bringer\\Documents\\JADS\\Aa-en-Maas\\Features\\' #(--data_path)
-weir='211C_211B' #(--weir)
+weir='103BIB_103BIC' #(--weir)
 risk_date='2021-04-01' # (--risk_date)
 prediction=True # True for prediction (--prediction)
 last_days=7 # (--last_days) For prediction: Defines how many days the linear model takes into account to predict the next 21 days
@@ -48,7 +49,7 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
     last_day = datetime.datetime.strptime(last_data.iloc[-1]['TIME'], "%Y-%m-%d") #setting the -1 to -21 might allow us to predict 21 days that are already in the data
                                                                                   # thus allowing us to compare data to our predictions.
     # Get dates of the next 21 days
-    new_dates=[last_day+datetime.timedelta(days=1)]#ifor i in range(1,3)]
+    new_dates=[last_day+datetime.timedelta(days=i) for i in range(1,5)]
     # Calculate back water by vegetation for the last days
     last_data['vegetation']=last_data['TIME'].apply(lambda row:calc_vegetation(weir,get_data(weir,data_path,date_format=True),row,data_path))
     last_data.reset_index(inplace=True)
@@ -60,7 +61,7 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
     # Fit the linear model on the last days
     reg.fit(x_train,y_train)
     # Get index for the next 21 days
-    x_test=[x_train[-1]+1]#+i for i in range(1,3)]
+    x_test=[x_train[-1]+i for i in range(1,5)]
     # Predict the vegetation for the next 21 days
     predictions=reg.predict(x_test)
     # Format
@@ -97,8 +98,11 @@ def predict_whole_df():
     for idx in range(8,len(df)):
         df1 = predict_vegetation(weir=args.weir, train_days=args.last_days, avg_temp=args.avg_temp,
                              data_path=args.data_path, pred_date_idx=idx)
-        final_df.append(df1, ignore_index=True)
+        final_df = final_df.append(df1.loc[1], ignore_index=True)
 
-    print(final_df)
+    return final_df
 
-predict_whole_df()
+df_for_year = predict_whole_df()
+
+plt.plot(df_for_year['Predicted backwater by vegetation'])
+plt.show()
