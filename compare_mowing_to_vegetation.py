@@ -106,3 +106,5 @@ df_for_year = predict_whole_df()
 
 plt.plot(df_for_year['Predicted backwater by vegetation'])
 plt.show()
+
+# consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
