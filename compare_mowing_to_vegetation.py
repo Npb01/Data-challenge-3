@@ -82,7 +82,7 @@ def predict_vegetation(weir, train_days,avg_temp,data_path, pred_date_idx):
     #print(df)
     return df
 
-def predict_whole_df():
+def predict_whole_df(weir, last_days):
     parser = argparse.ArgumentParser(description='Arguments get parsed via --commands')
     parser.add_argument('--weir', type=str, default=weir)
     parser.add_argument('--risk_date', type=str, default=risk_date)
@@ -94,7 +94,7 @@ def predict_whole_df():
 
     df = get_data(args.weir, args.data_path)
     final_df = predict_vegetation(weir=args.weir, train_days=args.last_days, avg_temp=args.avg_temp,
-                             data_path=args.data_path, pred_date_idx=7)
+                             data_path=args.data_path, pred_date_idx=(args.last_days+1))
 
     for idx in range(8,len(df)):
         df1 = predict_vegetation(weir=args.weir, train_days=args.last_days, avg_temp=args.avg_temp,
@@ -103,18 +103,29 @@ def predict_whole_df():
 
     return final_df
 
-df_for_year = predict_whole_df()
+#df_for_weir = predict_whole_df('103BIB_103BIC', 7)
 
-plt.plot(df_for_year['Predicted backwater by vegetation'])
+#plt.plot(df_for_weir['Predicted backwater by vegetation'])
 #plt.show()
 
 #df_for_year.reset_index(inplace=True)
 
-array_for_maxima = np.array(df_for_year['Predicted backwater by vegetation'])
-max_idxs = argrelextrema(array_for_maxima, np.greater)
-max_idxs_list = list(max_idxs[0])
-peak_dates = df_for_year.loc[max_idxs_list, ['TIME']]
-print(peak_dates)
+#array_for_maxima = np.array(df_for_year['Predicted backwater by vegetation'])
+#max_idxs = argrelextrema(array_for_maxima, np.greater)
+#max_idxs_list = list(max_idxs[0])
+#peak_dates = df_for_year.loc[max_idxs_list, ['TIME']]
+#print(peak_dates)
+
+def comparison(mow_dates, weir):
+    df_whole_weir = predict_whole_df(weir, 7)
+
+    array_for_maxima = np.array(df_for_year['Predicted backwater by vegetation'])
+    max_idxs = argrelextrema(array_for_maxima, np.greater)
+    max_idxs_list = list(max_idxs[0])
+    peak_dates = df_whole_weir.loc[max_idxs_list, ['TIME']]
+
+    mowing_dates = mow_dates[weir]
+
 
 
 # consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
