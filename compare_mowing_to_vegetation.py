@@ -6,10 +6,12 @@ import datetime
 from datetime import date
 from sklearn import linear_model
 import datetime
+#from datetime import datetime
 import argparse
 pd.options.mode.chained_assignment = None  # default='warn'
 from current_model import get_model, calc_vegetation, negative_backwater_to_zero
 from scipy.signal import argrelextrema
+import json
 
 #---------------Please adjust variables here or in the command line------------------------------------------------------------
 data_path=r'C:\\Users\\20193727\\Downloads\\data_for_students\\data\\feature_tables\\'
@@ -116,16 +118,32 @@ def predict_whole_df(weir, last_days):
 #peak_dates = df_for_year.loc[max_idxs_list, ['TIME']]
 #print(peak_dates)
 
+with open(r'C:\Users\20193727\Downloads\mowing_dates_dict.json') as json_file:
+    mow_data = json.load(json_file)
+
 def comparison(mow_dates, weir):
     df_whole_weir = predict_whole_df(weir, 7)
 
-    array_for_maxima = np.array(df_for_year['Predicted backwater by vegetation'])
+    array_for_maxima = np.array(df_whole_weir['Predicted backwater by vegetation'])
     max_idxs = argrelextrema(array_for_maxima, np.greater)
     max_idxs_list = list(max_idxs[0])
     peak_dates = df_whole_weir.loc[max_idxs_list, ['TIME']]
+    peak_dates = [pd.to_datetime(i) for i in peak_dates['TIME']]
+    #datetime.datetime.strptime(i, '%y-%m-%d')
 
-    mowing_dates = mow_dates[weir]
+    mowing_dates = [pd.to_datetime(i) for i in mow_dates[weir]]
 
+    correct_pred = 0
+    for D in mowing_dates:
+        res = min(peak_dates, key=lambda sub: abs(sub - D))
+        min_diff = res-D
+        if min_diff.days < 7 and min_diff.days > -7:
+            correct_pred += 1
 
+    acc = correct_pred / len(peak_dates)
+
+    print(acc)
+
+comparison(mow_data, '103BIB_103BIC')
 
 # consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
