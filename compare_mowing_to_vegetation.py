@@ -134,10 +134,10 @@ def comparison(mow_dates, weir):
     mowing_dates = [pd.to_datetime(i) for i in mow_dates[weir]]
 
     correct_pred = 0
-    for D in mowing_dates:
-        res = min(peak_dates, key=lambda sub: abs(sub - D))
+    for D in peak_dates:
+        res = min(mowing_dates, key=lambda sub: abs(sub - D))
         min_diff = res-D
-        if min_diff.days < 7 and min_diff.days > -7:
+        if min_diff.days < 7:
             correct_pred += 1
 
     acc = correct_pred / len(peak_dates)
