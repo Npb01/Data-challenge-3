@@ -129,7 +129,7 @@ def comparison(mow_dates, weir):
     #max_idxs = argrelextrema(array_for_maxima, np.greater)
     #max_idxs_list = list(max_idxs[0])
 
-    percentile = np.percentile(array_for_maxima, 75)
+    percentile = np.percentile(array_for_maxima, 90)
     #above_idx_list = [i for i, v in enumerate(array_for_maxima) if v > percentile]
 
     #peak_dates_df = df_whole_weir.loc[above_idx_list, ['TIME']]
@@ -139,9 +139,9 @@ def comparison(mow_dates, weir):
     df_above = df_whole_weir.loc[df_whole_weir['Predicted backwater by vegetation'] > percentile]
     peak_dates = df_above['TIME']
 
-    #plt.plot(df_above['Predicted backwater by vegetation'], 'bo')
-    #plt.plot(df_whole_weir['Predicted backwater by vegetation'])
-    #plt.show()
+    plt.plot(df_above['Predicted backwater by vegetation'], 'bo')
+    plt.plot(df_whole_weir['Predicted backwater by vegetation'])
+    plt.show()
 
     mowing_dates = [pd.to_datetime(i) for i in mow_dates[weir]]
 
