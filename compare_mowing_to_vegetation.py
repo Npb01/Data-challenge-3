@@ -151,8 +151,10 @@ def comparison(mow_dates, weir):
         min_diff = res-D
         if min_diff.days < 7:
             correct_pred += 1
-
-    acc1 = correct_pred / len(peak_dates)
+    try:
+        acc1 = correct_pred / len(peak_dates)
+    except:
+        acc1 = 0
 
     correct_pred2 = 0
     for D in mowing_dates:
@@ -160,8 +162,10 @@ def comparison(mow_dates, weir):
         min_diff = res - D
         if min_diff.days < 7:
             correct_pred2 += 1
-
-    acc2 = correct_pred2 / len(mowing_dates)
+    try:
+        acc2 = correct_pred2 / len(mowing_dates)
+    except:
+        acc2 = 0
 
     return acc1, acc2
 
