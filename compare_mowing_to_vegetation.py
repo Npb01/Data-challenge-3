@@ -118,7 +118,7 @@ def predict_whole_df(weir, last_days):
 #peak_dates = df_for_year.loc[max_idxs_list, ['TIME']]
 #print(peak_dates)
 
-with open(r'C:\Users\20193727\Downloads\mowing_dates_dict.json') as json_file:
+with open(r'C:\Users\20193727\Downloads\mowing_dates_dict2.json') as json_file:
     mow_data = json.load(json_file)
 
 def comparison(mow_dates, weir):
@@ -172,4 +172,7 @@ for weir in mow_data:
 
 final_df = pd.DataFrame.from_dict(allweir_acc, orient='index', columns=['% peak dates close to mowing', '% mowing dates with a predicted date close'])
 print(final_df)
+final_df.to_csv(r'C:\Users\20193727\Downloads\mowing_model_acc.csv')
+
+
 # consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
