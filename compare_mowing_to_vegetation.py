@@ -139,9 +139,9 @@ def comparison(mow_dates, weir):
     df_above = df_whole_weir.loc[df_whole_weir['Predicted backwater by vegetation'] > percentile]
     peak_dates = df_above['TIME']
 
-    plt.plot(df_above['Predicted backwater by vegetation'], 'bo')
-    plt.plot(df_whole_weir['Predicted backwater by vegetation'])
-    plt.show()
+    #plt.plot(df_above['Predicted backwater by vegetation'], 'bo')
+    #plt.plot(df_whole_weir['Predicted backwater by vegetation'])
+    #plt.show()
 
     mowing_dates = [pd.to_datetime(i) for i in mow_dates[weir]]
 
