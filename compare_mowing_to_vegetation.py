@@ -163,8 +163,13 @@ def comparison(mow_dates, weir):
 
     acc2 = correct_pred2 / len(mowing_dates)
 
-    print(acc1, acc2)
+    return acc1, acc2
 
-comparison(mow_data, '103BIB_103BIC')
+allweir_acc = {}
+for weir in mow_data:
+    a1, a2 = comparison(mow_data, weir)
+    allweir_acc['weir'] = [a1, a2]
 
+final_df = pd.DataFrame.from_dict(allweir_acc, orient='index', columns=['% peak dates close to mowing', '% mowing dates with a predicted date close'])
+print(final_df)
 # consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
