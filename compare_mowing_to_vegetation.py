@@ -147,6 +147,8 @@ def comparison(mow_dates, weir):
 
     correct_pred = 0
     for D in peak_dates:
+        if len(mowing_dates) == 0:
+            continue
         res = min(mowing_dates, key=lambda sub: abs(sub - D))
         min_diff = res-D
         if min_diff.days < 7:
@@ -158,6 +160,8 @@ def comparison(mow_dates, weir):
 
     correct_pred2 = 0
     for D in mowing_dates:
+        if len(peak_dates) == 0:
+            continue
         res = min(peak_dates, key=lambda sub: abs(sub - D))
         min_diff = res - D
         if min_diff.days < 7:
@@ -170,9 +174,12 @@ def comparison(mow_dates, weir):
     return acc1, acc2
 
 allweir_acc = {}
+r = 0
 for weir in mow_data:
     a1, a2 = comparison(mow_data, weir)
     allweir_acc['weir'] = [a1, a2]
+    r += 1
+    print(r)
 
 final_df = pd.DataFrame.from_dict(allweir_acc, orient='index', columns=['% peak dates close to mowing', '% mowing dates with a predicted date close'])
 print(final_df)
