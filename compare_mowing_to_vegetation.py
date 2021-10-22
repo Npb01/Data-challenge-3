@@ -177,7 +177,7 @@ allweir_acc = {}
 r = 0
 for weir in mow_data:
     a1, a2 = comparison(mow_data, weir)
-    allweir_acc['weir'] = [a1, a2]
+    allweir_acc[weir] = [a1, a2]
     r += 1
     print(r)
 
