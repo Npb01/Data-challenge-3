@@ -151,7 +151,7 @@ def comparison(mow_dates, weir):
             continue
         res = min(mowing_dates, key=lambda sub: abs(sub - D))
         min_diff = res-D
-        if min_diff.days < 7:
+        if min_diff.days < 7 and min_diff > -7:
             correct_pred += 1
     try:
         acc1 = correct_pred / len(peak_dates)
@@ -164,14 +164,17 @@ def comparison(mow_dates, weir):
             continue
         res = min(peak_dates, key=lambda sub: abs(sub - D))
         min_diff = res - D
-        if min_diff.days < 7:
+        if min_diff.days < 7 and min_diff.days > -7:
             correct_pred2 += 1
     try:
         acc2 = correct_pred2 / len(mowing_dates)
     except:
         acc2 = 0
 
+    #print(acc1, acc2)
     return acc1, acc2
+
+#comparison(mow_data, '251JF_251JE')
 
 allweir_acc = {}
 r = 0
@@ -183,7 +186,7 @@ for weir in mow_data:
 
 final_df = pd.DataFrame.from_dict(allweir_acc, orient='index', columns=['% peak dates close to mowing', '% mowing dates with a predicted date close'])
 print(final_df)
-final_df.to_csv(r'C:\Users\20193727\Downloads\mowing_model_acc.csv')
+final_df.to_csv(r'C:\Users\20193727\Downloads\mowing_model_acc_updated.csv')
 
 
-# consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
+#consider that if all 7 days before it ar 0 then the prediction will be zero consider this in analysis
