@@ -151,7 +151,7 @@ def comparison(mow_dates, weir):
             continue
         res = min(mowing_dates, key=lambda sub: abs(sub - D))
         min_diff = res-D
-        if min_diff.days < 7 and min_diff > -7:
+        if min_diff.days < 7 and min_diff.days > -7:
             correct_pred += 1
     try:
         acc1 = correct_pred / len(peak_dates)
